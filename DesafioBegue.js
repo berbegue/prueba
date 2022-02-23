@@ -1,56 +1,88 @@
-/* El siguiente script consiste en un juego de batalla naval,
-en primer lugar se solicita que el jugador 1 ingrese la posicion 
-horizontal y vertical de su barco, a traves de un proceso de validacion 
-se chequea que los numeros ingresados correspondan al rango establecido
-Una vez ingresados valores validos se le solicita al jugador 2 que ingrese
-la posicion de las bombas, teniendo 3 intentos para asertar.
-Al finalizar se le indica que jugador gano*/
-console.log('Desafio esta en funcionamiento');
-alert('Bienvenido a Batalla Naval')
-alert('Turno jugador 1')
-let barcoh=0;
-let barcov=0;
-let bombah=0;
-let bombav=0;
-while (barcoh>4 || barcoh<1 || isNaN(barcoh)){
-    barcoh=parseInt(prompt('Ingrese la posicion horizontal de 1 hasta 4'))
-    if(barcoh>4 || barcoh<1|| isNaN(barcoh)){
-        alert('Numero invalido')
-    }
-}
-while (barcov>4 || barcov<1 || isNaN(barcov)){
-    barcov=parseInt(prompt('Ingrese la posicion vertical de 1 hasta 4'))
-    if(barcov>4 || barcov<1|| isNaN(barcov)){
-        alert('Numero invalido')
-    }
-}
-    console.log(barcoh);
-    console.log(barcov);
-alert ('Turno jugador 2, tienes 3 intentos')
-    for (let i = 1; i<=3;i==i){
-            while (bombah>4 || bombah<1 || isNaN(bombah)){
-            bombah=parseInt(prompt('Ingrese la posicion horizontal de 1 hasta 4'))
-            if(bombah>4 || bombah<1|| isNaN(bombah)){
-                alert('Numero invalido')
-            }
-        }
-        while (bombav>4 || bombav<1 || isNaN(bombav)){
-            bombav=parseInt(prompt('Ingrese la posicion vertical de 1 hasta 4'))
-            if(bombav>4 || bombav<1|| isNaN(bombav)){
-                alert('Numero invalido')
-            }
-        }
-        if (bombah==barcoh && bombav==barcov){
-            alert('GANA JUGADOR 2');
-            break;
-        }  if (i<3){
-            alert(`Lo siento, prueba de nuevo, tienes ${3-i} intentos`)
-        bombah=0;
-        bombav=0;
-        i++;
+/* El siguiente simulador solicita al usuario la carga del salario mensual y el plazo en el que se 
+quiere solicitar el credito.
+En base a esos datos, tasas nominales anuales estandares y utilizando el sistema de amortizacion frances, 
+calcula periodo a periodo el valor de la cuota (en sistema frances es fijo), y la composicion (interes y capital).
+Como asi tambien el saldo de capital periodo a periodo.
+*/
+console.log('Desafio entregable 1 esta en funcionamiento');
+alert('Calculadora de Credito')
+let ingreso=0
+let plazo=0
+let TNA=0
+let monto=0;
+function definirTNA(ingreso,plazo){
+    monto=(ingreso*.2*plazo*12);
+    if (ingreso<100000){
+        if (plazo==1){
+            TNA=1.8;
+        } else if (plazo==2){
+            TNA=2;
         } else {
-            alert('Demasiados intentos, GANA JUGADR 1')
-        break;}
-        
+            TNA=2.2;
+        }
+    } else if (ingreso<250000){
+        if (plazo==1){
+            TNA=1.1;
+        } else if (plazo==2){
+            TNA=1.5;
+        } else {
+            TNA=1.8;
+        }
+    } else {
+        if (plazo==1){
+            TNA=0.6;
+        } else if (plazo==2){
+            TNA=0.75;
+        } else {
+            TNA=0.95;
+        }
     }
+}
+function ingresoDatos(){
+        while (ingreso<=0 || isNaN(ingreso)){
+        ingreso=parseInt(prompt('Cuál es su ingreso mensual en pesos'))
+        if(ingreso<0 || isNaN(ingreso)){
+            alert('Valor invalido')
+        }
+    }
+    while (plazo>3 || plazo<1 || isNaN(plazo)){
+        plazo=(prompt('Ingrese plazo de devolución del credito \n 1-12 meses \n 2-24 meses \n 3-36 meses'))
+        if(plazo>3 || plazo<1 || isNaN(plazo)){
+            alert('Plazo invalido')
+        }
+    }
+}
+function calculoCredito(TNA,ingreso,plazo){
+    let j=TNA/12;
+    let C=(monto*j*(1+j)**plazo)/((1+j)**plazo-1);
+    let Tp=0;
+    let tpi=0;
+    let Si=0;
+    let ip=0;
+    let Si0=monto;
+    for(i=1;i<=plazo;i++){
+        tpi=C-Si0*j-Si*j;    
+        Tp=Tp+tpi;    
+        Si=monto-Tp;
+        ip=C-tpi;
+        Si0=0
+        alert(`Usted puede acceder a un credito de $${monto.toFixed(2)} con una TNA=${(TNA*100).toFixed(2)}% a devolver en ${plazo} meses. \n La cuota ${i} tiene un valor de $${C.toFixed(2)}, compuesto por $${ip.toFixed(2)} de intereses y $${tpi.toFixed(2)} de capital. \n El saldo de capital para este periodo es de $${Si.toFixed(2)}`)
+    }
+}
+ingresoDatos();
+switch (plazo){
+    case "1":
+        definirTNA(ingreso,plazo);
+        calculoCredito(TNA,monto,12);
+        break;
+    case "2":
+        definirTNA(ingreso,plazo);
+        calculoCredito(TNA,monto,24);
+        break;
+    case "3":
+        definirTNA(ingreso,plazo);
+        calculoCredito(TNA,monto,36);
+        break;        
+}
+
     
